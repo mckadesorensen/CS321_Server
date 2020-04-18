@@ -18,8 +18,12 @@ container-shell:
 		--workdir="/project" \
 		cs321builderdev:latest
 
-project:
+%-init:
+	cd terraform/
 	rm -f .terraform/environment
 	terraform init	-reconfigure -input=false -no-color \
 		-backend-config "region=${AWS_REGION}"
-	terraform workspace new ${DEPLOY_NAME} || terraform workspace select ${DEPLOY_NAME}
+
+project: project-init
+	cd terraform/
+	terraform apply -auto-approve
