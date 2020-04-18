@@ -14,13 +14,13 @@ resource "aws_vpc" "cs321-vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "cs321-vpc"
+    Name = "${local.prefix}-vpc"
   }
 }
 
 
 resource "aws_security_group" "cs371-security-group" {
-  name = "cs371-security-group"
+  name = "${local.prefix}-security-group"
   vpc_id = aws_vpc.cs321-vpc.id
 
   egress {
