@@ -3,12 +3,7 @@ DIST_DIR := ${SELF_DIR}/dist
 
 .ONESHELL:
 
-.PHONY: container-shell
-
-clean:
-	rm -rf ${DIST_DIR}
-	find workflows -name "*.pyc" -type f -delete
-	find workflows -name __pycache__ -type d -delete
+.PHONY: container-shell project
 
 image: build/cs321.Dockerfile
 	cd build && \
@@ -20,4 +15,11 @@ container-shell:
 		-v ${CS321_ROOTDIR}/Project:/project \
 		-v ~/.aws:/root/.aws \
 		--name=cs321-dev \
+		--workdir="/project" \
 		cs321builderdev:latest
+
+project:
+	rm -f .terraform/environment
+	terraform init	-reconfigure -input=false -no-color \
+		-backend-config "region=${AWS_REGION}"
+	terraform workspace new ${DEPLOY_NAME} || terraform workspace select ${DEPLOY_NAME}
