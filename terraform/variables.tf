@@ -1,3 +1,7 @@
+variable "DEPLOY_NAME" {
+  type = string
+}
+
 variable "ami" {
   description = "AMI for EC2"
   default = {
